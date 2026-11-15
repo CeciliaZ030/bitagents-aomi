@@ -4,7 +4,6 @@
   "type": "module",
   "scripts": {
     "ask": "tsx --env-file-if-exists=.env src/run.ts",
-    "tour": "tsx --env-file-if-exists=.env src/tour.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
