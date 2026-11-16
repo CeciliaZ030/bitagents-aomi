@@ -5,7 +5,7 @@ use schemars::JsonSchema;
 use serde::Deserialize;
 use serde_json::{Value, json};
 
-use crate::{BUILD, BitAgents};
+use crate::{BUILD, BitAgents, DEFAULT_API_URL};
 
 /// An agent id is `ag` followed by lowercase hex, as issued by BITAGENTS.
 fn agent_id(raw: &str) -> Result<&str, String> {
@@ -26,23 +26,10 @@ fn agent_id(raw: &str) -> Result<&str, String> {
 }
 
 fn api(ctx: &DynToolCallCtx, agent: &str, body: Value) -> Result<Value, String> {
-    // A self-hosted build may bake in a default; a hosted release must be given the secret.
-    let base = match (
-        resolve_secret_value(ctx, None, "BITAGENTS_API_URL", ""),
-        option_env!("BITAGENTS_DEFAULT_API_URL"),
-    ) {
-        (Ok(url), _) => url,
-        (Err(_), Some(url)) => url.to_string(),
-        (Err(_), None) => {
-            return Err("BITAGENTS_API_URL is not configured for this app".to_string());
-        }
-    };
-    let key = resolve_secret_value(
-        ctx,
-        None,
-        "BITAGENTS_APP_KEY",
-        "BITAGENTS_APP_KEY is not configured for this app",
-    )?;
+    let base = resolve_secret_value(ctx, None, "BITAGENTS_API_URL", "")
+        .unwrap_or_else(|_| DEFAULT_API_URL.to_string());
+    // Sent only when configured; the service enforces it only when it has one set.
+    let key = resolve_secret_value(ctx, None, "BITAGENTS_APP_KEY", "").ok();
     let url = format!(
         "{}/builder/agents/{agent}/evaluate",
         base.trim_end_matches('/')
@@ -52,8 +39,12 @@ fn api(ctx: &DynToolCallCtx, agent: &str, body: Value) -> Result<Value, String> 
         .build()
         .map_err(|e| format!("http client: {e}"))?
         .post(&url)
-        .header("x-app-key", key)
-        .json(&body)
+        .json(&body);
+    let resp = match key {
+        Some(key) => resp.header("x-app-key", key),
+        None => resp,
+    };
+    let resp = resp
         .send()
         .map_err(|e| format!("BITAGENTS strategy service unreachable: {e}"))?;
     let status = resp.status();

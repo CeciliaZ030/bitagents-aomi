@@ -1,9 +1,7 @@
 use aomi_sdk::testing::{TestCtxBuilder, run_tool};
 use aomi_sdk::{DynAomiApp, DynAomiTool, validate_app_skills_with_tools};
-use bitagents::{BitAgents, Run, Status};
+use bitagents::{BitAgents, Run};
 use serde_json::{Value, json};
-
-const WALLET: &str = "11111111111111111111111111111112";
 
 #[test]
 fn skills_and_tools_are_valid() {
@@ -56,15 +54,4 @@ fn run_needs_a_connected_solana_wallet() {
         .err()
         .unwrap();
     assert!(err.contains("no Solana wallet"), "{err}");
-}
-
-#[test]
-fn status_needs_the_service_configured() {
-    let ctx = TestCtxBuilder::new(Status::NAME)
-        .attribute("domain", json!({ "svm": { "address": WALLET } }))
-        .build();
-    let err = run_tool::<Status>(&BitAgents, json!({ "agent_id": "ag1ea6b8de" }), ctx)
-        .err()
-        .unwrap();
-    assert!(err.contains("BITAGENTS_API_URL"), "{err}");
 }

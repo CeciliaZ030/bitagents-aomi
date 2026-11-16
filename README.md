@@ -16,12 +16,12 @@ returned instructions with Aomi's own Solana tools, and the wallet signs.
 
 ## Secrets
 
-Set both in the Project vault before the first chat:
+None are required. Both are optional overrides, set in the Project's Environment tab:
 
 | Slot | Value |
 | --- | --- |
-| `BITAGENTS_API_URL` | Public base URL of the BITAGENTS strategy service. |
-| `BITAGENTS_APP_KEY` | The service's `BUILDER_APP_KEY`. |
+| `BITAGENTS_API_URL` | Base URL of the strategy service, if not the default in `src/lib.rs`. |
+| `BITAGENTS_APP_KEY` | Sent as `x-app-key` when the service has `BUILDER_APP_KEY` set. |
 
 ## Test
 
