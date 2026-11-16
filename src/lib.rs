@@ -11,10 +11,10 @@ pub use tool::{Run, Status};
 use aomi_sdk::{Secret, dyn_aomi_app};
 
 /// Bump on every change so a deployed build can be told apart.
-pub const BUILD: &str = "v2";
+pub const BUILD: &str = "v3";
 
 /// The BITAGENTS strategy service. Override with the BITAGENTS_API_URL secret.
-pub const DEFAULT_API_URL: &str = "https://devbox.ratfish-drum.ts.net:10000";
+pub const DEFAULT_API_URL: &str = "https://bitagents.aomi.dev";
 
 #[derive(Clone, Default)]
 pub struct BitAgents;
