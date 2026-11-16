@@ -1,14 +1,14 @@
 # BIT Agents on Aomi
 
-One Aomi app that runs every agent built on BITAGENTS.
+One Aomi agent that runs every strategy built on BITAGENTS.
 
-An agent is a strategy spec stored by the BITAGENTS strategy service. The app
-has two tools, and each call names the agent by id:
+A strategy is a spec stored by the BITAGENTS strategy service. The app
+has two tools, and each call names the strategy by id:
 
 | Tool | What it does |
 | --- | --- |
-| `bitagents_status` | Reads the agent's strategy, limits, signals and the connected wallet's holdings. Never trades. |
-| `bitagents_run` | Runs the strategy once for the connected Solana wallet and returns orders plus a `next` field. |
+| `bitagents_status` | Reads the strategy's rules, limits, signals and the connected wallet's holdings. Never trades. |
+| `bitagents_run` | Runs it once for the connected Solana wallet and returns orders plus a `next` field. |
 
 The app never signs or sends anything. In paper mode the strategy service has
 already simulated each swap on mainnet. In live mode the model stages the
@@ -45,6 +45,6 @@ release. Set `server_tags = ["prod"]` and deploy against
 
 - `web/` renders `<AomiWidget>` in direct mode for the application id. Copy
   `web/src/main.tsx` into a site to embed the chat.
-- `client/` sends one prompt from Node: `pnpm --filter client ask "Run agent ag1ea6b8de"`.
+- `client/` sends one prompt from Node: `pnpm --filter client ask "Run strategy ag1ea6b8de"`.
 
 Bump `BUILD` in `src/lib.rs` on every change; both tools report it as `app_build`.

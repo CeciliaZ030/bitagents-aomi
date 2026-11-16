@@ -39,18 +39,18 @@ fn every_object_schema_has_properties() {
 }
 
 #[test]
-fn rejects_a_malformed_agent_id() {
+fn rejects_a_malformed_strategy_id() {
     let ctx = TestCtxBuilder::new(Run::NAME).build();
-    let err = run_tool::<Run>(&BitAgents, json!({ "agent_id": "../admin" }), ctx)
+    let err = run_tool::<Run>(&BitAgents, json!({ "strategy_id": "../admin" }), ctx)
         .err()
         .unwrap();
-    assert!(err.contains("not a BITAGENTS agent id"), "{err}");
+    assert!(err.contains("not a BITAGENTS strategy id"), "{err}");
 }
 
 #[test]
 fn run_needs_a_connected_solana_wallet() {
     let ctx = TestCtxBuilder::new(Run::NAME).build();
-    let err = run_tool::<Run>(&BitAgents, json!({ "agent_id": "ag1ea6b8de" }), ctx)
+    let err = run_tool::<Run>(&BitAgents, json!({ "strategy_id": "ag1ea6b8de" }), ctx)
         .err()
         .unwrap();
     assert!(err.contains("no Solana wallet"), "{err}");
